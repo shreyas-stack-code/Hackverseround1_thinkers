@@ -51,10 +51,11 @@ graph TD
 
     Synth -->|Synthesized & Cited Recommendation| API
     API --> UI
+```
+
 ---
 
 ## 🛠️ Technical Stack
-
 Our architecture strictly separates high-speed rendering, probabilistic reasoning, and deterministic safety into distinct execution layers.
 
 ### 🖥️ Frontend (The Visual Shell)
