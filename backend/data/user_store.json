@@ -1,0 +1,36 @@
+{
+  "u_conservative": {
+    "risk_profile": "conservative",
+    "history": [
+      {
+        "ticker": "RELIANCE",
+        "stance": "Strong signal to review",
+        "timestamp": "2026-09-01T14:56:42"
+      },
+      {
+        "ticker": "RELIANCE",
+        "stance": "Strong signal to review",
+        "timestamp": "2026-09-01T14:56:43"
+      }
+    ]
+  },
+  "u_moderate": {
+    "risk_profile": "moderate",
+    "history": [
+      {
+        "ticker": "RELIANCE",
+        "stance": "Strong signal to review",
+        "timestamp": "2026-09-01T15:02:52"
+      },
+      {
+        "ticker": "RELIANCE",
+        "stance": "Strong signal to review",
+        "timestamp": "2026-09-01T15:02:54"
+      }
+    ]
+  },
+  "u_aggressive": {
+    "risk_profile": "aggressive",
+    "history": []
+  }
+}
