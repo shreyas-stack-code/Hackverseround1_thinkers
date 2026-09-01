@@ -2,6 +2,7 @@
 Signal classification module.
 Evaluates three independent dimensions — momentum, volume anomaly, sentiment —
 each with a label, a confidence score, and a plain-language reasoning string.
+Includes graceful degraded-data handling for missing/partial feeds.
 """
 from statistics import mean, pstdev
 
@@ -12,9 +13,17 @@ NEGATIVE_WORDS = {"pressure", "weak", "weakness", "moderates", "burns", "scrutin
 
 
 def classify_momentum(price_series):
+    if not price_series or len(price_series) < 5:
+        return {
+            "dimension": "momentum",
+            "label": "Degraded Feed: Baseline Momentum",
+            "confidence": 0.50,
+            "reasoning": "Live price feed degraded/unavailable — fallback baseline 50% confidence applied."
+        }
+
     closes = [p["close"] for p in price_series]
     short_ma = mean(closes[-5:])
-    long_ma = mean(closes[-20:])
+    long_ma = mean(closes[-20:]) if len(closes) >= 20 else mean(closes)
     pct_diff = (short_ma - long_ma) / long_ma * 100
 
     if pct_diff > 3:
@@ -25,12 +34,20 @@ def classify_momentum(price_series):
         label, confidence = "Neutral / range-bound", 0.55
 
     reasoning = (f"5-day average close ({short_ma:.1f}) is {pct_diff:+.1f}% vs "
-                 f"20-day average ({long_ma:.1f}).")
+                 f"long-term average ({long_ma:.1f}).")
     return {"dimension": "momentum", "label": label, "confidence": round(confidence, 2),
             "reasoning": reasoning}
 
 
 def classify_volume_anomaly(price_series):
+    if not price_series or len(price_series) < 5:
+        return {
+            "dimension": "volume_anomaly",
+            "label": "Degraded Feed: Volume Baseline",
+            "confidence": 0.50,
+            "reasoning": "Insufficient volume tick data — fallback baseline volume active."
+        }
+
     volumes = [p["volume"] for p in price_series]
     recent = volumes[-1]
     baseline = volumes[:-1]
@@ -50,6 +67,14 @@ def classify_volume_anomaly(price_series):
 
 
 def classify_sentiment(headlines):
+    if not headlines:
+        return {
+            "dimension": "sentiment",
+            "label": "Degraded Feed: Neutral Sentiment",
+            "confidence": 0.50,
+            "reasoning": "No news coverage or sentiment feed available — neutral baseline citation."
+        }
+
     pos, neg = 0, 0
     for h in headlines:
         words = set(w.strip(",.").lower() for w in h.split())
