@@ -1,4 +1,4 @@
-# ⚡ FinIntel: Multi-Agent Financial Intelligence System
+# ⚡ FinBot: Multi-Agent Financial Intelligence System
 
 > Bridging the gap between raw public financial data and personalized, actionable decision-making for retail investors.
 
